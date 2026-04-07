@@ -1,0 +1,40 @@
+============================================================
+  AOI Defect Triage — Phase 1 Evaluation Report
+============================================================
+  Generated : 2026-04-02 02:02:48
+  Model     : cnn_baseline_v1.pth  (best epoch: 20)
+  Val acc at save time : 96.40%
+  Test samples : 118,595
+
+  OVERALL TEST ACCURACY : 89.28%
+
+  Per-Class Accuracy:
+  Class            Correct    Total  Accuracy  Status
+  -------------------------------------------------------
+  Center               494      832    59.38%     LOW
+  Donut                 90      146    61.64%     LOW
+  Edge-Loc            1850     2772    66.74%     LOW
+  Edge-Ring            744     1126    66.07%     LOW
+  Loc                  894     1973    45.31%     LOW
+  Near-full             86       95    90.53%      OK
+  Random               195      257    75.88%      OK
+  Scratch              221      693    31.89%     LOW
+  none              101312   110701    91.52%      OK
+
+  Confusion Matrix  (rows = actual class, cols = predicted class)
+
+                  Center  Donut Edge-L Edge-R    Loc Near-f Random Scratc   none
+                 ---------------------------------------------------------------
+  Center             494     12     34      0     30      0      1      8    253
+  Donut                2     90      1      0     42      0      5      4      2
+  Edge-Loc             6      1   1850     55    179      1     45     44    591
+  Edge-Ring            2      0    309    744      0      0      0      2     69
+  Loc                 73     16    215      0    894      1      7    183    584
+  Near-full            0      0      0      0      0     86      9      0      0
+  Random               7      6     20      0     12      3    195      1     13
+  Scratch              1      2     39      0    148      0      0    221    282
+  none               242      6   3207     74   2070      0     21   3769 101312
+
+  Note: bbox is set to full image in Phase 1.
+        Real bounding boxes will be added in Phase 3 (YOLO).
+============================================================
