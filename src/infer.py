@@ -75,6 +75,26 @@ def predict(image_path, model, img_size, device):
 # Main
 # ---------------------------------------------------------------------------
 
+def build_result_dict(image_id, machine_id, lot_id, layer,
+                      classes, pred_idx, confidence, img_size) -> dict:
+    """Build the locked AOI JSON contract dict from inference outputs."""
+    defect_class = classes[pred_idx]
+    ng_flag      = defect_class.lower() != "none"
+    return {
+        "image_id":      image_id,
+        "machine_id":    machine_id,
+        "lot_id":        lot_id,
+        "layer":         layer,
+        "timestamp":     datetime.now(timezone.utc).isoformat(),
+        "defect_class":  defect_class,
+        "confidence":    round(confidence, 4),
+        "bbox":          [0, 0, img_size, img_size],   # Phase 1: full image placeholder
+        "ng_flag":       ng_flag,
+        "model_name":    "cnn_baseline",
+        "model_version": MODEL_PATH.stem,
+    }
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="AOI Defect Triage — single image inference (Phase 1)"
@@ -100,23 +120,12 @@ def main():
     model, classes, img_size = load_model(MODEL_PATH, device)
 
     pred_idx, confidence = predict(image_path, model, img_size, device)
-    defect_class = classes[pred_idx]
-    ng_flag      = defect_class.lower() != "none"
 
     # Build locked JSON contract output
-    result = {
-        "image_id":      args.image_id,
-        "machine_id":    args.machine_id,
-        "lot_id":        args.lot_id,
-        "layer":         args.layer,
-        "timestamp":     datetime.now(timezone.utc).isoformat(),
-        "defect_class":  defect_class,
-        "confidence":    round(confidence, 4),
-        "bbox":          [0, 0, img_size, img_size],   # Phase 1: full image placeholder
-        "ng_flag":       ng_flag,
-        "model_name":    "cnn_baseline",
-        "model_version": MODEL_PATH.stem,
-    }
+    result = build_result_dict(
+        args.image_id, args.machine_id, args.lot_id, args.layer,
+        classes, pred_idx, confidence, img_size,
+    )
 
     print(json.dumps(result, indent=2))
 

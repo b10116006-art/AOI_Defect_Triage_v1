@@ -244,3 +244,167 @@ Note: `bbox` is `[0, 0, 64, 64]` (full image) in Phase 1. Real bounding boxes ar
 - No MES Copilot integration
 
 These are planned for Phases 2–5.
+
+---
+
+## Phase 2 — FastAPI Inference Service
+
+Phase 2 wraps the Phase 1 inference logic into a callable HTTP service.
+
+### Install new dependencies
+
+```
+pip install -r requirements.txt
+```
+
+### Start the service
+
+Run from the project root:
+
+```
+uvicorn src.api:app --reload
+```
+
+The service starts on `http://localhost:8000`.
+
+### Send a prediction request
+
+The endpoint accepts a JSON body with a base64-encoded image and optional metadata.
+
+```bash
+curl -X POST http://localhost:8000/predict \
+  -H "Content-Type: application/json" \
+  -d "{
+    \"image_base64\": \"$(base64 -w 0 data/processed/test/Scratch/test_000123.png)\",
+    \"image_id\": \"img_0042\",
+    \"machine_id\": \"AOI_02\",
+    \"lot_id\": \"LOT456\",
+    \"layer\": \"M1\"
+  }"
+```
+
+### Example successful response
+
+```json
+{
+  "image_id": "img_0042",
+  "machine_id": "AOI_02",
+  "lot_id": "LOT456",
+  "layer": "M1",
+  "timestamp": "2026-04-06T08:00:00+00:00",
+  "defect_class": "Scratch",
+  "confidence": 0.9712,
+  "bbox": [0, 0, 64, 64],
+  "ng_flag": true,
+  "model_name": "cnn_baseline",
+  "model_version": "cnn_baseline_v1",
+  "request_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "processing_time_ms": 12.5,
+  "schema_version": "v1"
+}
+```
+
+### MES integration note
+
+The response is the locked AOI JSON contract with three appended fields.
+A downstream MES service can consume `POST /predict` directly and use the
+JSON payload as the Vision Layer signal in the broader decision pipeline.
+
+---
+
+## Phase 2 — Smoke Test
+
+A one-click PowerShell script that validates the running API against two scenarios.
+
+### Prerequisites
+
+1. The API must be running before you execute the script:
+
+```
+uvicorn src.api:app --reload
+```
+
+2. The test dataset must exist (`data/processed/test/Scratch/test_000561.png`).
+   If it is missing, run `prepare_data.py` first (see Phase 1 steps above).
+
+### Run the smoke test
+
+From the **project root** in PowerShell:
+
+```
+.\tools\test_predict_smoke.ps1
+```
+
+### Test 1 — Happy path (valid image)
+
+The script reads `data/processed/test/Scratch/test_000561.png`, encodes it as
+base64, and calls `POST /predict`.
+
+Expected successful output:
+
+```
+--------------------------------------------------------------
+  Test 1: Happy Path  (valid Scratch image -> /predict)
+--------------------------------------------------------------
+
+  Full response:
+  {
+    "image_id": "smoke_test_001",
+    "machine_id": "AOI_SMOKE",
+    ...
+    "schema_version": "v1"
+  }
+
+  Checking required fields:
+    OK  image_id          = smoke_test_001
+    OK  machine_id        = AOI_SMOKE
+    OK  lot_id            = LOT_SMOKE
+    OK  layer             = ILD
+    OK  timestamp         = 2026-04-10T...
+    OK  defect_class      = Scratch   (or none / other class)
+    OK  confidence        = 0.xxxx
+    OK  bbox              = [0, 0, 64, 64]
+    OK  ng_flag           = True / False
+    OK  model_name        = cnn_baseline
+    OK  model_version     = cnn_baseline_v1
+    OK  request_id        = <uuid>
+    OK  processing_time_ms = xx.xx
+    OK  schema_version    = v1
+
+  [PASS] All 14 contract fields present
+```
+
+### Test 2 — Bad request (invalid base64)
+
+The script sends a deliberately malformed `image_base64` string.
+The API is expected to reject it with HTTP 400.
+
+Expected output:
+
+```
+--------------------------------------------------------------
+  Test 2: Bad Request  (invalid base64 -> expect HTTP 400)
+--------------------------------------------------------------
+
+  HTTP status: 400
+  Error body:  {"error":"Invalid image: could not decode base64 or open image file."}
+
+  [PASS] API correctly returned HTTP 400 for invalid base64
+```
+
+### Final summary line
+
+When both tests pass:
+
+```
+--------------------------------------------------------------
+  Smoke Test Summary
+--------------------------------------------------------------
+  PASS: 2
+  FAIL: 0
+
+  ALL TESTS PASSED — Phase 2 API is healthy.
+```
+
+If a test fails, the script prints `[FAIL]` in red with a diagnostic message
+and a reminder to check whether the API is running.
