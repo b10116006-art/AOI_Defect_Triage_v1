@@ -223,3 +223,40 @@ Each weakness points to a concrete next step:
 Phase 2 (FastAPI) can be built and tested even before the model improves.
 The locked contract ensures downstream consumers are not affected by model version changes.
 This is the correct architecture for a production-facing AI system.
+
+---
+
+# Phase 3 — Detection Feasibility Validation
+
+## Goal
+Test whether a YOLO-style detector can be trained on WM-811K by deriving
+bboxes from failing-die pixels.
+
+## Dry-run result (FAILURE)
+`src/convert_to_yolo.py` produced bbox annotations, but inspection
+showed:
+- bboxes covered scattered failing dies, not defect "objects"
+- multiple semantically-different patterns (Scratch vs Loc) yielded
+  visually identical bbox layouts
+- no consistent object boundary existed for the model to learn
+
+## Root cause
+WM-811K is a **pattern-classification dataset**, not an object-detection
+dataset. `pixel == 255` marks a failing die, not a defect region.
+Any bbox derived from connected-component logic on these pixels is
+semantically invalid — it encodes die-level failure, not a localizable
+defect object.
+
+## Decision pivot
+- Detection on wafer maps is **abandoned** for this repo.
+- Real defect detection is moved to a **separate AOI-camera dataset**
+  in a future layer, not WM-811K.
+- The system is re-framed as a layered pipeline:
+  **pattern diagnosis → visual localization → automated action**
+  where wafer-map classification (Phase 1) and AOI-camera detection
+  (future) are distinct stages with distinct data sources.
+
+## Lesson
+Always validate the **semantic meaning of pixels** before assuming a
+dataset supports a task. A dataset that visually "looks like" detection
+data may still be classification-only at the label level.
