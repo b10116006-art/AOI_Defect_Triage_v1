@@ -16,8 +16,10 @@ Future integration direction:
 - but runtime-level coupling is intentionally deferred until later phases
 
 ## 2. Current phase
-Phase 2 — FastAPI inference API  
-Status: **Phase 2 complete and validated**
+Phase 1 — CNN classification baseline → **complete**
+Phase 2 — FastAPI inference service → **complete**
+Phase 3 — Detection feasibility validation → **validated; detection path on WM-811K deferred**
+(See AOI_MASTER_ROADMAP.md §Phase 3 and §4.1 for the revised layered architecture.)
 
 ### Phase 1 completed items
 - [x] Preprocessing complete — 172,950 labeled samples recovered from 811,457 total rows
@@ -90,7 +92,7 @@ Phase 2 keeps the base contract unchanged and only appends:
 ## 6. Phase order
 - Phase 1: CNN classification baseline
 - Phase 2: FastAPI inference API
-- Phase 3: YOLO / detection baseline
+- Phase 3: YOLO / detection baseline  *(re-scoped: validated as not feasible on wafer maps; real detection belongs to AOI-camera layer)*
 - Phase 4: LLM defect explanation
 - Phase 5: Integration with MES Copilot
 
@@ -106,7 +108,14 @@ Outputs:
 - saved model weights and result report
 
 ## 8. Immediate next step
-**Phase 3 — YOLO / detection baseline**
+> **Update (post Phase 3 validation):** the original "YOLO / detection
+> baseline" plan below was validated as not feasible on WM-811K (pixel=255
+> = failing die, not defect region). The next real step is to define the
+> separate **AOI-camera detection** dataset/layer per the layered
+> architecture in AOI_MASTER_ROADMAP.md §4.1. The original plan is kept
+> below for history.
+
+**Phase 3 — YOLO / detection baseline** *(historical plan, re-scoped)*
 
 Target:
 - move from class-only prediction to real localization

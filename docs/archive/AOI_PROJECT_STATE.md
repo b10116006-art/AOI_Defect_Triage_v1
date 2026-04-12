@@ -7,8 +7,10 @@ Independent Vision Layer subproject for AOI defect triage.
 Standalone demo first, later optional integration with MES Copilot.
 
 ## 2. Current phase
-Phase 1 — CNN classification baseline  
-Status: **Phase 1 complete**
+Phase 1 — CNN classification baseline → **complete**
+Phase 2 — FastAPI inference service → **complete**
+Phase 3 — Detection feasibility validation → **validated; detection path on WM-811K deferred**
+(See AOI_MASTER_ROADMAP.md §Phase 3 and §4.1 for the revised layered architecture.)
 
 ### Phase 1 completed items
 - [x] Preprocessing complete — 172,950 labeled samples recovered from 811,457 total rows
@@ -53,7 +55,7 @@ The JSON contract between Vision Layer and MES Layer is fixed and must not be ch
 ## 6. Phase order
 - Phase 1: CNN classification baseline
 - Phase 2: FastAPI inference API
-- Phase 3: YOLO / detection baseline
+- Phase 3: YOLO / detection baseline  *(re-scoped: validated as not feasible on wafer maps; real detection belongs to AOI-camera layer)*
 - Phase 4: LLM defect explanation
 - Phase 5: Integration with MES Copilot
 

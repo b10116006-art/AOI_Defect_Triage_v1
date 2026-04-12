@@ -87,6 +87,23 @@ Current status:
 ### AOI repo scope
 This repo currently owns only the Vision Layer and its immediate serving path.
 
+### 4.1 Revised layered architecture (post Phase 3 validation)
+
+The system is now explicitly layered by data source, not by model type:
+
+1. **Wafer Map → Pattern Classification** (existing Phase 1, WM-811K)
+2. **AOI Camera → Defect Detection** (separate dataset, YOLO or similar)
+3. **MES / Decision Layer** (process context fusion)
+4. **Automation / Robot Action Layer** (downstream response)
+
+End-to-end pipeline:
+
+**pattern diagnosis → visual localization → automated action**
+
+Each layer owns its own dataset and its own model. They are joined only
+through the JSON contract boundary, never by sharing pixels across
+incompatible data sources.
+
 ---
 
 ## 5. Phase Map
@@ -165,37 +182,30 @@ With API serving, it becomes a reusable system module.
 
 ---
 
-## Phase 3 — YOLO Detection Extension
+## Phase 3 — Detection Feasibility Validation (completed)
 ### Goal
-Upgrade from classification-only output to localization-capable output.
+Validate whether YOLO-style bbox detection can be derived directly from
+WM-811K wafer maps.
 
-### Why this phase exists
-Phase 1 proves the model can classify defect pattern.
-Phase 3 makes the system more manufacturing-usable by localizing the defect.
+### Conclusion
+**Not feasible on this dataset.** WM-811K is a pattern-classification
+dataset: pixel value 255 indicates a failing die, not a defect object
+region. Any bbox derived from connected-component logic on these pixels
+is therefore semantically invalid and must not be used as a detection
+ground truth.
 
-### Planned work
-- dataset conversion to YOLO format
-- annotation strategy for bbox
-- training + validation baseline
-- compare detection vs classification utility
-- defect-specific analysis for:
-  - Scratch
-  - Loc
-  - edge-related patterns
+### What was tried (preserved for history)
+- dataset conversion to YOLO format (`src/convert_to_yolo.py`, dry-run)
+- annotation strategy via failing-die clustering
+- bbox sanity inspection on Scratch / Loc / edge patterns
 
-### Honest current status
-- architecture direction is defined
-- detection phase is planned
-- full YOLO training baseline is **not yet completed** in this repo
-
-### Interview-safe phrasing
-Use this phrasing:
-- “YOLO detection pipeline is planned / architected as Phase 3”
-- “classification baseline is complete; detection is the next CV extension”
-- “current repo has completed CNN baseline, with YOLO positioned as the localization upgrade”
+### Decision
+Detection on wafer maps is **deferred / re-scoped**. Real defect
+detection belongs to a separate AOI-camera dataset, not WM-811K.
+See the new layered architecture in §4.1.
 
 ### Status
-**Planned**
+**Validated and closed. Detection path moved to AOI camera layer.**
 
 ---
 

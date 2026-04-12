@@ -149,7 +149,11 @@ Example output:
 }
 ```
 
-Note: `bbox` is the full image in Phase 1. Real bounding boxes come in Phase 3 (YOLO).
+Note: `bbox` is the full image in Phase 1. The original Phase 3 plan to
+derive real bboxes from WM-811K was later validated as not feasible
+(WM-811K is pattern-classification data, not object-detection data).
+See AOI_MASTER_ROADMAP.md §Phase 3 and AOI_DEBUG_EVOLUTION.md for the
+revised architecture.
 Note: `ng_flag` is `true` for any defect class other than `none`.
 
 Optional metadata flags:
@@ -230,7 +234,10 @@ Single-image inference confirmed working. Example output (Scratch image):
 }
 ```
 
-Note: `bbox` is `[0, 0, 64, 64]` (full image) in Phase 1. Real bounding boxes are planned for Phase 3 (YOLO).
+Note: `bbox` is `[0, 0, 64, 64]` (full image) in Phase 1. The original
+Phase 3 plan to derive real bboxes from WM-811K was later validated as
+not feasible — see AOI_MASTER_ROADMAP.md §Phase 3 and
+AOI_DEBUG_EVOLUTION.md for the revised layered architecture.
 
 ---
 
