@@ -54,7 +54,39 @@ Proposed name for the new repo: `AOI_Camera_YOLO_Demo_v1`.
 
 ---
 
-## 2. Why DAGM 2007 as the primary dataset
+## 2. Primary dataset — Roboflow Wafer Defect v2
+
+### Why Roboflow wafer defect is now the primary dataset
+
+After the Phase 3 re-scope of A, the B Project needs a dataset whose
+pixels are *already* real semiconductor surface defects with
+bounding-box labels. The Roboflow **Wafer Defect v2 (final)** export
+(YOLOv11 format) provides exactly that:
+
+- Real wafer-surface defect imagery, not synthesized textures.
+- Seven defect classes already relevant to fab AOI vocabulary:
+  `BLOCK ETCH`, `COATING BAD`, `PARTICLE`, `PIQ PARTICLE`,
+  `PO CONTAMINATION`, `SCRATCH`, `SEZ BURNT`.
+- Pre-split into `train/valid/test` with YOLO `.txt` labels — directly
+  compatible with Ultralytics, no ellipse-to-bbox conversion needed.
+- License: CC BY 4.0 (workspace `wafer-irhuv`, project
+  `wafer-defect-rv1vx`, version 2).
+
+This replaces DAGM 2007 as the **primary** training source for the B
+Project. DAGM is retained as a methodology control (see §2.1).
+
+### 2.1 DAGM 2007 — demoted to control / method validation
+
+DAGM 2007 is no longer the primary training set. It is kept in the
+B Project strictly as a **comparison / method validation** dataset:
+a synthetic-texture benchmark we can point to when explaining that
+the training methodology (YOLO bounding-box detection on surface
+defects) is the same one used by the academic inspection community
+for fifteen years. We do not claim DAGM numbers are semiconductor
+numbers; the Roboflow dataset is what carries that claim.
+
+Historical rationale for DAGM is retained below because the A → B
+story still relies on it as a credibility anchor in interviews.
 
 ### The honest constraint
 
@@ -299,7 +331,7 @@ repo will not contain MES code.
 
 ---
 
-## 5. First milestone — YOLO baseline on DAGM 2007
+## 5. First milestone — YOLO baseline on Roboflow wafer defect
 
 The first milestone is intentionally narrow. It exists to prove the
 pipeline runs end-to-end on real data, in the same spirit as A's
@@ -307,8 +339,10 @@ Phase 1.
 
 ### Goal
 
-Train a YOLO baseline on DAGM 2007 and produce one valid detection
-JSON for one test image.
+Train a YOLO baseline on the Roboflow wafer defect v2 dataset (7
+classes) and produce one valid detection JSON for one test image.
+DAGM 2007 is retained only as a comparison / method-validation run
+and is **not** required for milestone 1 to be green.
 
 ### In scope
 
@@ -344,17 +378,20 @@ JSON for one test image.
 
 Milestone 1 is complete when **all** of the following are true:
 
-- DAGM 2007 raw data exists under `data/raw/` and has not been
-  modified.
-- A converted YOLO-format dataset exists under `data/processed/`
-  with `train/`, `val/`, and `test/` splits.
-- `train.py` runs end-to-end without errors and saves a checkpoint
-  to `models/yolo_aoi_v1.pt`.
-- `evaluate.py` produces a per-class mAP table and saves
+- Roboflow wafer defect v2 raw data exists under
+  `data/raw/roboflow_wafer/` and has not been modified in place.
+- `src/b_yolo/prepare_roboflow_wafer.py` has been run, producing a
+  clean YOLO-format tree under
+  `data/processed/roboflow_wafer_yolo/` with `train/`, `valid/`, and
+  `test/` splits and a `data.yaml` that uses absolute paths.
+- `train.py` runs end-to-end against that `data.yaml` without errors
+  and saves a checkpoint under `models/b_yolo/.../weights/best.pt`.
+- `evaluate.py` produces a per-class mAP table (7 classes) and saves
   `results/eval_report.txt`.
-- `predict.py` runs on one DAGM test image and prints a JSON payload
-  that matches the B-side contract in §4.3 exactly (field names,
-  field ordering, `bbox_format: "xyxy"`).
+- `predict.py` runs on one Roboflow test image and prints a JSON
+  payload that matches the B-side contract in §4.3 exactly (field
+  names, field ordering, `bbox_format: "xyxy"`). The `defect_class`
+  values must be drawn from the seven Roboflow class names.
 - `README_milestone1.md` allows a fresh clone to rerun the full
   pipeline.
 
