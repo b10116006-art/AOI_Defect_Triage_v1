@@ -407,6 +407,44 @@ Milestone 1 is complete when **all** of the following are true:
   green. A's Phase 1 → Phase 2 sequencing is the model: prove the
   offline pipeline first, wrap it in a service second.
 
+### Milestone 1 progress log
+
+| Step | Status | Date |
+|------|--------|------|
+| B1 — `prepare_roboflow_wafer.py` run, processed tree created | done | 2026-04-13 |
+| B2 — bbox sanity check (`check_bbox_samples.py`) passed | done | 2026-04-16 |
+| B3 — `train.py` settings aligned to Roboflow dataset | done | 2026-04-17 |
+| B4 — 2-epoch smoke training completed successfully | done | 2026-04-18 |
+| B5 — full 20-epoch baseline training completed | done | 2026-04-19 |
+| B6 — `predict.py` JSON contract validation on test image | **next** | — |
+| B7 — `evaluate.py` per-class mAP report | done | 2026-04-19 |
+
+**B4 smoke results (2 epochs, yolov8n, imgsz=640, batch=8):**
+
+- overall mAP50 = 0.395, mAP50-95 = 0.203
+- these are 2-epoch numbers — only proof that the pipeline runs
+  end-to-end without errors.
+
+**B5 full baseline results (20 epochs, yolov8n, imgsz=640, batch=8):**
+
+- overall mAP50 = 0.715, mAP50-95 = 0.467
+- strongest classes: PIQ PARTICLE, PARTICLE, BLOCK ETCH
+- weakest classes: COATING BAD, SEZ BURNT
+- checkpoint: `runs/detect/models/b_yolo/roboflow_wafer_v12/weights/best.pt`
+- default hyperparameters, no tuning — honest baseline as specified
+  in non-goals.
+
+**B7 per-class mAP evaluation (20 epochs, yolov8n, imgsz=640, batch=8):**
+
+- overall mAP50 = 0.715, mAP50-95 = 0.467
+- strongest classes: SCRATCH (0.844), PARTICLE (0.815),
+  PIQ PARTICLE (0.798)
+- weakest classes: COATING BAD (0.512), PO CONTAMINATION (0.577)
+- class imbalance confirmed — small-dataset classes underperform as
+  expected.
+- accepted as the official baseline for decision-layer integration
+  (milestone 2 and onward).
+
 ---
 
 ## 6. Relationship to A Project commitments
