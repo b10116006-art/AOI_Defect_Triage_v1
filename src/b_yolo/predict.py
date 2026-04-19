@@ -10,7 +10,7 @@ from datetime import datetime, timezone
 
 from ultralytics import YOLO
 
-DEFAULT_WEIGHTS = "models/b_yolo/dagm_v1/weights/best.pt"
+DEFAULT_WEIGHTS = "runs/detect/models/b_yolo/roboflow_wafer_v12/weights/best.pt"
 MODEL_NAME = "yolo_aoi_camera"
 MODEL_VERSION = "yolo_aoi_v1"
 SCHEMA_VERSION = "v1"
