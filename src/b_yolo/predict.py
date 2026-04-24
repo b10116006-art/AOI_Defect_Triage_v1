@@ -16,20 +16,25 @@ MODEL_VERSION = "yolo_aoi_v1"
 SCHEMA_VERSION = "v1"
 
 
-def main() -> None:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--image", required=True)
-    parser.add_argument("--weights", default=DEFAULT_WEIGHTS)
-    parser.add_argument("--image-id", default="img_demo")
-    parser.add_argument("--lot-id", default=None)
-    parser.add_argument("--wafer-id", default=None)
-    parser.add_argument("--trigger-id", default=None)
-    parser.add_argument("--conf", type=float, default=0.25)
-    args = parser.parse_args()
+_MODELS: dict = {}
 
-    model = YOLO(args.weights)
+
+def run_inference(
+    image_path: str,
+    weights: str = DEFAULT_WEIGHTS,
+    image_id: str = "img_demo",
+    lot_id=None,
+    wafer_id=None,
+    trigger_id=None,
+    conf: float = 0.25,
+) -> dict:
+    model = _MODELS.get(weights)
+    if model is None:
+        model = YOLO(weights)
+        _MODELS[weights] = model
+
     t0 = time.time()
-    result = model(args.image, conf=args.conf, verbose=False)[0]
+    result = model(image_path, conf=conf, verbose=False)[0]
     elapsed_ms = (time.time() - t0) * 1000.0
 
     detections = []
@@ -42,11 +47,12 @@ def main() -> None:
             "bbox_format": "xyxy",
         })
 
-    payload = {
-        "image_id": args.image_id,
-        "trigger_id": args.trigger_id,
-        "lot_id": args.lot_id,
-        "wafer_id": args.wafer_id,
+    # Contract stability: all keys always present, even when value is None.
+    return {
+        "image_id": image_id,
+        "trigger_id": trigger_id,
+        "lot_id": lot_id,
+        "wafer_id": wafer_id,
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "detections": detections,
         "ng_flag": len(detections) > 0,
@@ -56,8 +62,28 @@ def main() -> None:
         "processing_time_ms": round(elapsed_ms, 2),
         "schema_version": SCHEMA_VERSION,
     }
-    # Drop optional fields that were not provided so the payload stays clean.
-    payload = {k: v for k, v in payload.items() if v is not None}
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--image", required=True)
+    parser.add_argument("--weights", default=DEFAULT_WEIGHTS)
+    parser.add_argument("--image-id", default="img_demo")
+    parser.add_argument("--lot-id", default=None)
+    parser.add_argument("--wafer-id", default=None)
+    parser.add_argument("--trigger-id", default=None)
+    parser.add_argument("--conf", type=float, default=0.25)
+    args = parser.parse_args()
+
+    payload = run_inference(
+        image_path=args.image,
+        weights=args.weights,
+        image_id=args.image_id,
+        lot_id=args.lot_id,
+        wafer_id=args.wafer_id,
+        trigger_id=args.trigger_id,
+        conf=args.conf,
+    )
     print(json.dumps(payload, indent=2))
 
 
