@@ -381,3 +381,25 @@ You can accurately say:
 - The next stage is to wrap inference into a FastAPI service.
 - The AOI system is intentionally designed as the Vision Layer of a broader MES + RAG + LLM decision architecture.
 - YOLO detection is planned as the next CV extension for localization, after the classification baseline and service layer are stabilized.
+
+---
+
+## 12. Enhancement Track reference (non-blocking)
+
+`docs/core/COURSE_TECH_GAP_ANALYSIS.md` defines an **Enhancement Track**
+of course-driven improvement ideas (data augmentation, focal loss,
+ResNet backbone, Grad-CAM, Optuna, U-Net, ControlNet synthetic data,
+domain adaptation, etc.).
+
+Rules:
+
+- The Enhancement Track is a **reference**, not a phase. It does **not**
+  change the order of Phase 1 → Phase 6 above.
+- Enhancement items are **non-blocking** and **planned only** — none
+  are implemented.
+- Each item is gated by a Main Track milestone. See
+  `docs/core/B_PROJECT_BRIEF.md` §7 for the trigger-based timing table
+  (after B8.2 / after ingestion+eval loop / after MES+decision
+  readiness).
+- Items in §10 "Deferred on Purpose" stay deferred; the Enhancement
+  Track does not override them.

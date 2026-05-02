@@ -464,3 +464,69 @@ The B Project will live in a separate repository. This brief stays in
 A's `docs/core/` because the layered architecture in
 `AOI_MASTER_ROADMAP.md` §4.1 needs an authoritative pointer to where
 Layer 2 is being built and why.
+
+---
+
+## 7. Enhancement Track (Non-blocking)
+
+This section connects the AOI Enhancement Track defined in
+`docs/core/COURSE_TECH_GAP_ANALYSIS.md` to the B Project execution
+plan. It is informational and does **not** change any milestone scope
+or order above.
+
+### 7.1 Status
+
+- The Enhancement Track is **optional**.
+- It **must not delay** the Main Track.
+- It is for performance improvement **after** baseline stability, not
+  before.
+- All Enhancement Track items are **planned only** — none are
+  implemented. No item may be presented as implemented in any
+  document, README, or interview narrative until it is actually done.
+
+### 7.2 Main Track (execution-critical, order is fixed)
+
+1. B8 — FastAPI AOI Evidence Service wrapper *(merged)*
+2. B8.1 — minimal health check
+3. B8.2 — service hardening (weights config / logging)
+4. AOI evidence ingestion
+5. MES integration
+6. Decision / triage layer
+
+The Main Track order is fixed. **No Enhancement Track item is allowed
+to move into B8, B8.1, or B8.2.**
+
+### 7.3 Enhancement Track items (non-blocking)
+
+Sourced verbatim from `COURSE_TECH_GAP_ANALYSIS.md` — see that
+document for full rationale, expected effect, and effort estimates:
+
+- data augmentation (E1)
+- focal loss (E2)
+- ResNet backbone / transfer learning (E3)
+- Grad-CAM explainability (E4)
+- Optuna hyperparameter search (E5)
+- multi-label / ViT / U-Net segmentation (X1–X3)
+- domain adaptation, ControlNet synthetic data, small-sample learning
+  (V1–V3)
+
+### 7.4 Trigger-based execution timing
+
+Enhancement items are not floating. Each is gated on a Main Track
+milestone being green first:
+
+| Trigger (Main Track milestone reached) | Eligible Enhancement items |
+|---|---|
+| After **B8.2** (logging / config available) | Optuna sweeps (E5), augmentation trials (E1) |
+| After **AOI evidence ingestion / evaluation loop** exists | focal loss (E2), ResNet backbone (E3), dataset-level improvements (X1, X2) |
+| After **MES / decision layer readiness** | Grad-CAM (E4), explainability, U-Net evidence (X3), advanced synthetic-data work (V1–V3) |
+
+Items above their trigger row are *candidates*, not commitments. They
+are evaluated only after the trigger milestone is complete.
+
+### 7.5 Constraints carried over from the roadmap
+
+- The JSON contract (§4) is **not** modified by any Enhancement Track
+  item.
+- Items in `AOI_MASTER_ROADMAP.md` §10 "Deferred on Purpose" remain
+  deferred; the Enhancement Track does not reopen them.
