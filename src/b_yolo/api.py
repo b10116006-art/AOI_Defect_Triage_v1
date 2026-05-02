@@ -16,6 +16,11 @@ from .predict import DEFAULT_WEIGHTS, run_inference
 app = FastAPI(title="AOI Evidence Service", version="0.1.0")
 
 
+@app.get("/health")
+def health() -> dict:
+    return {"status": "ok"}
+
+
 class PredictRequest(BaseModel):
     image_path: str
     image_id: str = "img_demo"
