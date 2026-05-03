@@ -530,3 +530,51 @@ are evaluated only after the trigger milestone is complete.
   item.
 - Items in `AOI_MASTER_ROADMAP.md` §10 "Deferred on Purpose" remain
   deferred; the Enhancement Track does not reopen them.
+
+---
+
+## 8. Next Execution Order
+
+This section refines the Main Track sequence in §7.2 by inserting an
+evaluation smoke loop (B8.3) and naming the downstream phases
+B9 / B10 / B11. Nothing in §7.2 is rewritten; this is the granular
+execution order going forward.
+
+### 8.1 Completed
+
+- **B8 — Evidence Service**: completed
+- **B8.1 — Health check**: completed
+
+### 8.2 Next
+
+- **B8.2 — Service hardening** *(next)*
+  - weights config
+  - request logging
+  - error handling
+
+### 8.3 After B8.2
+
+- **B8.3 — Evaluation smoke loop**
+  - fixed sample set
+  - schema regression check
+  - baseline output record
+
+### 8.4 Controlled Enhancement trial (gated)
+
+- Allowed **only after** B8.2 **and** B8.3 are complete.
+- Scope: **augmentation or focal loss trial only** — one item, not a
+  bundle.
+- Must be **measured against the B8.3 baseline output record**. An
+  enhancement that cannot be measured against baseline is not run.
+- Must **not interrupt** B8.2 or B8.3.
+- The Enhancement Track is **gated, not deferred forever** — but no
+  enhancement is presented as implemented until it has been measured
+  and merged.
+
+### 8.5 Then
+
+- **B9 — AOI evidence artifact / ingestion boundary**
+  - JSONL / local artifact first
+  - Mongo adapter later
+- **B10 — MES integration adapter**
+- **B11 — Decision / triage layer**
