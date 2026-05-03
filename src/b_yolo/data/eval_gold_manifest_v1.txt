@@ -1,0 +1,32 @@
+# B8.3 / DG-2 gold manifest v1
+#
+# Fixed sample of 20 Roboflow Wafer Defect v2 test images, taken from
+# the alphabetical head of the test split for determinism. This list
+# is the seed of DG-2 (Gold Dataset) and the fixed sample set for the
+# B8.3 evaluation smoke loop.
+#
+# Manifest version : v1
+# Source split     : data/processed/roboflow_wafer_yolo/test/images/
+# Selection rule   : sorted(filenames)[:20]
+#
+# All paths are relative to the project root.
+data/processed/roboflow_wafer_yolo/test/images/10076_image1_resize_JPG.rf.9330e9ac190bbb927e72920039a13b88.jpg
+data/processed/roboflow_wafer_yolo/test/images/10109_image2_jpg.rf.b1d00c86d57f5f3e8731222de30d7070.jpg
+data/processed/roboflow_wafer_yolo/test/images/10113_image4_jpg.rf.6536c388d9f829cc2d615273a1856f15.jpg
+data/processed/roboflow_wafer_yolo/test/images/1015_image2_jpg.rf.356fa488f5bbc3f673c5a0429b6b8e0b.jpg
+data/processed/roboflow_wafer_yolo/test/images/10181_image1_jpg.rf.5384f8dd6a2bf75f353d67ba8d2e293f.jpg
+data/processed/roboflow_wafer_yolo/test/images/10181_image3_jpg.rf.9be9c71adbb0635afdebdae86a285644.jpg
+data/processed/roboflow_wafer_yolo/test/images/10182_image2_jpg.rf.0ae87eca6d4b36ac51b3d1474f9b6cc4.jpg
+data/processed/roboflow_wafer_yolo/test/images/10205_image1_jpg.rf.64a844dc6f41fdb1a8cb9d103ea5df66.jpg
+data/processed/roboflow_wafer_yolo/test/images/10206_image3_jpg.rf.714c52f960042bc490f364c1fa982d1e.jpg
+data/processed/roboflow_wafer_yolo/test/images/10215_image2_jpg.rf.73a0ee7233d800f238c7c87a92dd4a52.jpg
+data/processed/roboflow_wafer_yolo/test/images/1022_image1_jpg.rf.978330e8cf8a2813e3d5a0245e77a4b7.jpg
+data/processed/roboflow_wafer_yolo/test/images/10284_image6_jpg.rf.f10c6b6b258063b88655f50d88675c3c.jpg
+data/processed/roboflow_wafer_yolo/test/images/1034_image1_jpg.rf.2b100477d68d13cf32148ae204b56b9e.jpg
+data/processed/roboflow_wafer_yolo/test/images/10363_image2_jpg.rf.9773e446698d169a58ea3395ee2b884c.jpg
+data/processed/roboflow_wafer_yolo/test/images/10392_image1_jpg.rf.3111e2e16338fae14e345fbc8e109481.jpg
+data/processed/roboflow_wafer_yolo/test/images/10433_image2_jpg.rf.173eb7aaa02c40d1d56ed514fd7eb81c.jpg
+data/processed/roboflow_wafer_yolo/test/images/10440_image1_jpg.rf.af9183660a1c248d10ede583ced18d31.jpg
+data/processed/roboflow_wafer_yolo/test/images/10453_image1_jpg.rf.a5aacdde6abd820648c8e0533e9c754b.jpg
+data/processed/roboflow_wafer_yolo/test/images/10600_image1_resize_JPG.rf.6754f889172cf87273e55361ab4223d8.jpg
+data/processed/roboflow_wafer_yolo/test/images/10701_image1_jpg.rf.b94366154aa384f25383a19aa004529a.jpg
