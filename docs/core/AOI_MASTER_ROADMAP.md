@@ -403,3 +403,62 @@ Rules:
   readiness).
 - Items in §10 "Deferred on Purpose" stay deferred; the Enhancement
   Track does not override them.
+
+---
+
+## 13. Data Governance / Annotation Quality Track (parallel, planned)
+
+The Data Governance (DG) Track defines the **annotation-quality
+preconditions** under which model numbers can be trusted. It is a
+parallel, planned track — none of its items are implemented.
+
+Items DG-1 through DG-8 are defined in `docs/core/B_PROJECT_BRIEF.md`
+§9. Headlines:
+
+- DG-1 Annotation Spec — rules for accepting / rejecting Roboflow
+  pre-labels, not a from-scratch SOP
+- DG-2 Gold Dataset — expert-reviewed reference subset
+- DG-3 QA Mechanism — format checks, double-label sampling, gold
+  insertion
+- DG-4 Metrics emphasis — mAP / IoU + false-negative priority
+- DG-5 Annotator qualification — *low priority short-term, no
+  in-house annotation team*
+- DG-6 Closed-loop feedback — error → review → spec → dataset bump
+- DG-7 Version control — annotation_spec / dataset / model / eval
+  versions bound together
+- DG-8 Tooling — pre-label seed, audit log, IAA (Cohen's Kappa /
+  Krippendorff's Alpha)
+
+### Positioning
+
+- DG is the **quality precondition** for the Enhancement Track.
+  Enhancement asks "how do we make the number better?"; DG asks "is
+  the number itself trustworthy?".
+- DG uses its own `DG-N` numbering and does **not** consume Main
+  Track numbers (no B8.4, B8.5).
+- DG does **not** reorder Main Track. The current order remains
+  B8.2 → B8.3 → (Controlled Enhancement trial) → B9 → B10 → B11.
+
+### Hard dependencies (gates)
+
+- **B8.3** *(current focus)* — needs minimal DG-1 (spec draft) and
+  DG-2 (gold subset, even 20–50 samples) to be meaningful, but DG is
+  non-blocking for B8.3 itself.
+- **Enhancement Track** — DG-1 through DG-4 must be **stable** before
+  any enhancement (augmentation, focal loss, backbone, etc.) is run.
+- **B9** *(critical gate)* — DG-7 versioning must be in place.
+  Ingested evidence must carry `dataset_version` and
+  `annotation_spec_version`. MES must not consume ambiguous evidence.
+- **B10 / B11** — DG-6 closed-loop feedback must be ready.
+
+### Rules
+
+- All DG items are **planned only** and must not be presented as
+  implemented in any document or interview narrative until they are.
+- DG does **not** modify the JSON contract (§4 in
+  `B_PROJECT_BRIEF.md`). Any version metadata exposed downstream
+  (e.g., for B9) is added at ingestion time, not by changing the
+  existing detection schema.
+
+See `docs/core/B_PROJECT_BRIEF.md` §9 for the execution-level item
+definitions, B8.3 integration, and gating timing.

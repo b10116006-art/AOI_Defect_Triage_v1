@@ -578,3 +578,95 @@ execution order going forward.
   - Mongo adapter later
 - **B10 — MES integration adapter**
 - **B11 — Decision / triage layer**
+
+---
+
+## 9. Data Governance / Annotation Quality Track
+
+This section defines the Data Governance (DG) Track referenced in
+`AOI_MASTER_ROADMAP.md` §13. The DG Track is a **parallel, planned**
+track. It is the **quality precondition for the Enhancement Track
+defined in §7**: Enhancement asks "how do we improve the number"; DG
+asks "is the number trustworthy". All DG items below are *planned
+only* — none are implemented.
+
+DG items use their own `DG-N` numbering and do **not** consume Main
+Track numbers (no B8.4 / B8.5). The Main Track order in §8 is
+unchanged: B8.2 → B8.3 → (Controlled Enhancement trial) → B9 → B10 →
+B11.
+
+### 9.1 AOI-specific framing
+
+The B Project trains on **Roboflow Wafer Defect v2**, a public
+pre-labelled dataset. Therefore:
+
+- **DG-1 (Annotation Spec)** is the rulebook for *accepting or
+  rejecting* Roboflow's labels for our use, not a from-scratch
+  annotation SOP.
+- **DG-5 (Annotator qualification)** is **low priority short-term** —
+  there is no in-house annotation team. Kept as planned for the case
+  where edge-case re-labelling becomes necessary.
+- **IAA (DG-8)** primarily exists to validate Roboflow original-label
+  quality when re-labelling edge cases is needed in the future.
+
+### 9.2 DG items (all planned, none implemented)
+
+| ID | Item | AOI-specific scope |
+|----|------|--------------------|
+| DG-1 | Annotation Spec | 7-class defect ontology rules; bbox vs. segmentation definition; noise-vs-defect intensity threshold; clustered-defect merge / split rule; edge-case if-else; gold examples (correct vs. incorrect) |
+| DG-2 | Gold Dataset | Expert-reviewed subset (normal + boundary + rare) used for B8.3 regression baseline, Enhancement evaluation, and future model comparison |
+| DG-3 | QA Mechanism | Auto format checks (YOLO `.txt` schema), double-label sampling, blind gold-data insertion for drift detection |
+| DG-4 | Metrics emphasis | mAP50 / IoU for bbox; **false-negative priority** (semiconductor: missed defect ≫ false alarm) |
+| DG-5 | Annotator qualification | IoU ≥ 0.85 threshold, ongoing scoring (low priority — no current in-house team) |
+| DG-6 | Closed-loop feedback | Model error → annotation review → spec revision → dataset version bump |
+| DG-7 | Version control | `annotation_spec_version` + `dataset_version` + `model_version` + `eval_version` bound together |
+| DG-8 | Tooling | Pre-label seed (YOLO inference), audit log, IAA (Cohen's Kappa / Krippendorff's Alpha). Low IAA = spec ambiguity, not human error |
+
+### 9.3 Hard dependencies (gates)
+
+- **B8.3 (current focus)** — needs *minimal* DG-1 (draft spec) and
+  DG-2 (gold subset, even 20–50 samples drawn from the test split)
+  to be meaningful. The DG track is **non-blocking** for B8.3 itself,
+  but B8.3 should reference DG-2 as its fixed sample set when
+  available.
+- **Enhancement Track (§7, §8.4)** — DG-1 through DG-4 must be
+  **stable** before any enhancement (augmentation, focal loss,
+  backbone change, etc.) is run. Enhancement without stable reference
+  data is not run.
+- **B9 (critical gate)** — DG-7 versioning must be in place before
+  ingestion goes live. Ingested evidence must carry
+  `dataset_version` and `annotation_spec_version`. MES must not
+  consume ambiguous AOI evidence.
+- **B10 / B11** — DG-6 closed-loop feedback must be ready before the
+  decision / triage layer is wired.
+
+### 9.4 B8.3 integration (current focus)
+
+`B8.3 — Evaluation smoke loop` (§8.3) integrates with DG as follows:
+
+- B8.3 must use **DG-2 Gold Dataset** as its fixed evaluation set
+  (small is acceptable — 20–50 samples). The "fixed sample set"
+  bullet in §8.3 is satisfied by DG-2.
+- Each B8.3 run must:
+  - use the same `dataset_version`,
+  - produce a **baseline output record** (predictions + metrics),
+  - keep the schema regression check against the §4.3 contract.
+- **DG-4** metrics (mAP / IoU + false-negative emphasis) must be
+  explicitly referenced in B8.3 outputs.
+- The goal of B8.3 is **not** performance improvement — it is to
+  establish a **reproducible baseline** that downstream gates
+  (Enhancement trial, B9 ingestion) can compare against.
+- DG-1 may be incomplete at B8.3 time, but a **minimal draft** must
+  exist so evaluation results can be interpreted.
+
+### 9.5 Rules
+
+- All DG items are planned and must not be presented as implemented
+  in any document or interview narrative until they are.
+- DG does **not** modify the JSON contract in §4. Any version
+  metadata exposed downstream (for DG-7 at B9) is added at ingestion
+  time, not by changing the existing detection schema.
+- DG numbering is independent. DG items must **not** be renumbered
+  into B8.x or any Main Track slot.
+- The DG Track runs in parallel and must **not** interrupt B8.2 or
+  B8.3.
