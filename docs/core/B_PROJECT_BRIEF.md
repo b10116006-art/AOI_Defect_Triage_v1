@@ -670,3 +670,131 @@ pre-labelled dataset. Therefore:
   into B8.x or any Main Track slot.
 - The DG Track runs in parallel and must **not** interrupt B8.2 or
   B8.3.
+
+---
+
+## 10. DG-1 Annotation Spec v0 (draft)
+
+This is the **v0 draft** of DG-1 referenced in §9. Its purpose is to
+make B8.3 evaluation results interpretable; it is **not** a complete
+annotation SOP. AOI-specific, scoped to the current B Project
+detection output (§4.3) and the Roboflow Wafer Defect v2 class set.
+
+### 10.1 Status
+
+- Spec version: `draft_v0` (matches the `annotation_spec_version`
+  placeholder used by `src/b_yolo/eval_smoke.py`).
+- Authority: pending. Until an expert reviewer signs off, "**accept
+  Roboflow's label**" is the default rule for every case this spec
+  does not explicitly override.
+- Coverage: deliberately partial. Items left as `TBD by expert
+  review` are honest gaps, not oversights.
+- DG-1 is **planned** in DG terms; this v0 draft exists only so
+  evaluation outputs are interpretable.
+
+### 10.2 Defect ontology — 7-class accept / reject rules
+
+The class vocabulary is **fixed** to the seven Roboflow Wafer Defect
+v2 classes. No class merging, splitting, or renaming at v0:
+
+| Class (verbatim Roboflow label) | What we accept the label for | When to flag (do not silently relabel) |
+|---|---|---|
+| `BLOCK ETCH` | Localised etch-block region with sharply bounded edges. | Diffuse low-contrast region with no clear etch boundary → flag. |
+| `COATING BAD` | Visible coating non-uniformity / colour shift on otherwise normal surface. | Region overlapping `PO CONTAMINATION` → flag (coating-vs-contamination ambiguity). |
+| `PARTICLE` | Compact, roughly convex bright spot above the local background. | Long thin bright streak → flag, candidate for `SCRATCH`. |
+| `PIQ PARTICLE` | Particle on PIQ-treated surface (PIQ context required). | Particle without PIQ-context evidence → flag, default to `PARTICLE`. |
+| `PO CONTAMINATION` | Polyimide / organic contamination patches with characteristic texture. | Bright glossy spot (no organic texture) → flag, candidate for `PARTICLE`. |
+| `SCRATCH` | Linear / curvilinear feature with length ≫ width. | Aspect ratio approaching 1:1 → flag, candidate for `PARTICLE`. |
+| `SEZ BURNT` | Burn / discolouration with a characteristic scorched halo. | Discoloured but non-scorched region → flag, may not be a defect. |
+
+Accept-default: when a Roboflow label exists and does not trip a flag
+above, **accept it**. v0 introduces no new classes.
+
+### 10.3 bbox vs. segmentation
+
+- Output is **bbox-only**, format `xyxy` per §4.3. v0 does **not**
+  introduce segmentation masks.
+- Acceptable bbox: axis-aligned, fully contains the defect, padding
+  ≤ ~5 px around the visible defect at native resolution.
+- Reject (flag for re-label):
+  - bbox cropping into the defect (any defect pixel outside the box);
+  - bbox so loose that >50% of its area is clearly background;
+  - rotated / non-axis-aligned annotations imported from another tool.
+
+### 10.4 Threshold rules — noise vs. defect
+
+These are **interpretation** rules for evaluating labels and
+detections. They do **not** change the model's runtime confidence
+threshold (which stays at the request-level `conf`, default 0.25):
+
+- A region is treated as a defect candidate only if its visible
+  extent is **≥ ~8 px on the shorter side** at native resolution.
+  Below that it is sensor / texture noise.
+- Local intensity excursions within **±10%** of the surrounding
+  median are treated as background variation, not defect, unless
+  they exhibit a §10.2 shape cue (e.g., linearity → `SCRATCH`).
+- The numeric thresholds above are **draft heuristics for v0**, not
+  measured constants. Expert review is expected to replace them with
+  process-derived numbers when DG-1 promotes to v1.
+
+### 10.5 Clustered defects — merge vs. split
+
+- **Same class, touching or overlapping (IoU > 0) → merge** into one
+  bbox.
+- **Same class, separated by clean background → split** into separate
+  bboxes, one per visually distinct instance.
+- **Different classes in spatial proximity → keep separate**, even if
+  overlapping. Each class gets its own bbox.
+- A bbox is **never** allowed to span two visually disjoint defect
+  regions just to reduce annotation count.
+
+### 10.6 Edge cases (if-else, v0)
+
+- **Defect at image border, partially clipped** → annotate the
+  visible portion. Do **not** discard the image.
+- **Multiple candidates, only one labelled by Roboflow** → flag the
+  image. Do not silently add a second bbox at v0.
+- **Class disagreement between Roboflow label and §10.2 shape rule**
+  (e.g., long thin region labelled `PARTICLE`) → flag for review;
+  keep the original Roboflow label until a reviewer resolves it.
+- **Image clearly defect-free but Roboflow has a label** → flag; do
+  not delete the label at v0.
+- **Image clearly defective but Roboflow has no label** → flag as a
+  **false-negative candidate** (see §10.7).
+- **Ambiguous or unreadable image** (motion blur, focus loss) →
+  flag and exclude from the gold set; do not retain in DG-2.
+
+### 10.7 False-negative priority (alignment with DG-4)
+
+The semiconductor cost model is **missed defect ≫ false alarm**.
+This spec biases ambiguous decisions toward *reporting a defect*:
+
+- When in doubt between "no defect" and "defect (uncertain class)" →
+  prefer **defect with a flagged class**, not "no defect".
+- When in doubt between two defect classes → keep the Roboflow
+  label and flag for review; do **not** drop the bbox.
+- Per-class weak performers from the B7 baseline — `COATING BAD`,
+  `PO CONTAMINATION`, `SEZ BURNT` — are the priority targets for
+  DG-2 expert review, because under-recall on these classes is a
+  false-negative risk, not just an mAP nuisance.
+- The B8.3 baseline record's `ng_count` is the early proxy for
+  recall behaviour. A future change that *lowers* `ng_count` without
+  an explicit reason is treated as a **suspected false-negative
+  regression**, not a quality improvement, until investigated.
+
+### 10.8 Gold examples (placeholder)
+
+v0 does **not** yet ship correct / incorrect example image pairs.
+Capturing them is part of the DG-2 expert review pass on the gold
+manifest at `src/b_yolo/data/eval_gold_manifest_v1.txt`.
+
+### 10.9 Constraints carried over
+
+- This spec must **not** modify the §4 JSON contract.
+- This spec does **not** introduce new classes, new bbox formats, or
+  new fields in `/predict` output.
+- The spec is versioned via `annotation_spec_version` and is bound
+  alongside `dataset_version` / `model_version` / `eval_version` per
+  DG-7.
+- Promoting `draft_v0` to `v1` requires expert review sign-off on
+  the §10.2 flags and §10.4 thresholds.
