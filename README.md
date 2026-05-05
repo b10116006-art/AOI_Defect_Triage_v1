@@ -67,6 +67,7 @@ src/
   infer.py              # Single-image inference (CLI)
   api.py                # FastAPI inference service (POST /predict)
   b_yolo/               # Track B: YOLO detection pipeline
+    api.py              # Track B FastAPI inference service
     train.py            # YOLO training on Roboflow dataset
     predict.py          # YOLO prediction
     eval_smoke.py       # Evaluation smoke test
@@ -122,7 +123,7 @@ curl -X POST http://localhost:8000/predict \
 | Phase 3 | Detection feasibility on WM-811K | Validated: not feasible, moved to Track B |
 | B-track | YOLO detection on Roboflow Wafer Defect | mAP50=0.715 achieved |
 | B8.2 | Service hardening + weights config | Complete |
-| B8.3 | Evaluation smoke loop + gold dataset | In progress |
+| B8.3 | Evaluation smoke loop + gold dataset | In progress (20-image baseline committed) |
 | Phase 4 | Batch inference + production-style IO | Planned |
 | Phase 5 | AOI → MES integration via JSON contract | Planned |
 
