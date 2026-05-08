@@ -29,7 +29,7 @@ def fmt(x, n=4):
     return f"{x:.{n}f}" if x is not None else "n/a"
 
 
-def analyze(record: dict, low_conf: float) -> str:
+def analyze(record: dict, low_conf: float, input_path: str) -> str:
     predictions = record.get("predictions") or []
     image_count = record.get("image_count", len(predictions))
 
@@ -73,7 +73,7 @@ def analyze(record: dict, low_conf: float) -> str:
     lines = []
     lines.append("B8.3 baseline analysis")
     lines.append("=" * 60)
-    lines.append("input               : results/b8_3_baseline.json")
+    lines.append(f"input               : {input_path}")
     lines.append(f"dataset_version     : {record.get('dataset_version')}")
     lines.append(f"annotation_spec_ver : {record.get('annotation_spec_version')}")
     lines.append(f"model_version       : {record.get('model_version')}")
@@ -143,7 +143,7 @@ def main() -> None:
     args = parser.parse_args()
 
     record = json.loads(Path(args.input).read_text(encoding="utf-8"))
-    report = analyze(record, args.low_conf)
+    report = analyze(record, args.low_conf, args.input)
 
     out_path = Path(args.output)
     out_path.parent.mkdir(parents=True, exist_ok=True)
