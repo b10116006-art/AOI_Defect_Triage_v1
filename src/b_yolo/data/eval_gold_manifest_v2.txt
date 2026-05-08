@@ -1,0 +1,70 @@
+# B8.3 / DG-2 gold manifest v2
+#
+# Expanded from v1 (20 images) to ~50 images with per-class
+# coverage >= 7. Each of the 7 Roboflow Wafer Defect v2 classes
+# is represented; priority top-up classes BLOCK ETCH and SEZ BURNT
+# (which had 0 detections in the v1 baseline analysis) are
+# explicitly seeded.
+#
+# Manifest version : v2
+# Source split     : data/processed/roboflow_wafer_yolo/test/images/
+# Selection rule   :
+#   1. include every image listed in eval_gold_manifest_v1.txt
+#      so the v1 baseline corresponds to a deterministic subset of v2
+#   2. for each of the 7 classes, top up with the alphabetically-
+#      first test-split images of that class until the class has
+#      >= 7 entries in the manifest (>= 5 required, 7 to give
+#      headroom for expert flagging in DG-1)
+#   3. final list sorted by filename for determinism
+#
+# All paths are relative to the project root.
+data/processed/roboflow_wafer_yolo/test/images/10076_image1_resize_JPG.rf.9330e9ac190bbb927e72920039a13b88.jpg
+data/processed/roboflow_wafer_yolo/test/images/10109_image2_jpg.rf.b1d00c86d57f5f3e8731222de30d7070.jpg
+data/processed/roboflow_wafer_yolo/test/images/10113_image4_jpg.rf.6536c388d9f829cc2d615273a1856f15.jpg
+data/processed/roboflow_wafer_yolo/test/images/1015_image2_jpg.rf.356fa488f5bbc3f673c5a0429b6b8e0b.jpg
+data/processed/roboflow_wafer_yolo/test/images/10181_image1_jpg.rf.5384f8dd6a2bf75f353d67ba8d2e293f.jpg
+data/processed/roboflow_wafer_yolo/test/images/10181_image3_jpg.rf.9be9c71adbb0635afdebdae86a285644.jpg
+data/processed/roboflow_wafer_yolo/test/images/10182_image2_jpg.rf.0ae87eca6d4b36ac51b3d1474f9b6cc4.jpg
+data/processed/roboflow_wafer_yolo/test/images/10205_image1_jpg.rf.64a844dc6f41fdb1a8cb9d103ea5df66.jpg
+data/processed/roboflow_wafer_yolo/test/images/10206_image3_jpg.rf.714c52f960042bc490f364c1fa982d1e.jpg
+data/processed/roboflow_wafer_yolo/test/images/10215_image2_jpg.rf.73a0ee7233d800f238c7c87a92dd4a52.jpg
+data/processed/roboflow_wafer_yolo/test/images/1022_image1_jpg.rf.978330e8cf8a2813e3d5a0245e77a4b7.jpg
+data/processed/roboflow_wafer_yolo/test/images/10284_image6_jpg.rf.f10c6b6b258063b88655f50d88675c3c.jpg
+data/processed/roboflow_wafer_yolo/test/images/1034_image1_jpg.rf.2b100477d68d13cf32148ae204b56b9e.jpg
+data/processed/roboflow_wafer_yolo/test/images/10363_image2_jpg.rf.9773e446698d169a58ea3395ee2b884c.jpg
+data/processed/roboflow_wafer_yolo/test/images/10392_image1_jpg.rf.3111e2e16338fae14e345fbc8e109481.jpg
+data/processed/roboflow_wafer_yolo/test/images/10433_image2_jpg.rf.173eb7aaa02c40d1d56ed514fd7eb81c.jpg
+data/processed/roboflow_wafer_yolo/test/images/10440_image1_jpg.rf.af9183660a1c248d10ede583ced18d31.jpg
+data/processed/roboflow_wafer_yolo/test/images/10453_image1_jpg.rf.a5aacdde6abd820648c8e0533e9c754b.jpg
+data/processed/roboflow_wafer_yolo/test/images/10600_image1_resize_JPG.rf.6754f889172cf87273e55361ab4223d8.jpg
+data/processed/roboflow_wafer_yolo/test/images/10701_image1_jpg.rf.b94366154aa384f25383a19aa004529a.jpg
+data/processed/roboflow_wafer_yolo/test/images/10720_image1_jpg.rf.b30cfe32c5735cd4d5d3e198235ef409.jpg
+data/processed/roboflow_wafer_yolo/test/images/10766_image1_jpg.rf.f2f822829ee692ae1a166a1ea907d71a.jpg
+data/processed/roboflow_wafer_yolo/test/images/10775_image1_resize_JPG.rf.b8e801e3706ba01b84dfc090f86c8c58.jpg
+data/processed/roboflow_wafer_yolo/test/images/10792_image1_resize_JPG.rf.9d554ca9049fba35579b3b38e77a1da3.jpg
+data/processed/roboflow_wafer_yolo/test/images/10821_image1_resize_JPG.rf.6f029bcac2477b7f292c732c3c676b36.jpg
+data/processed/roboflow_wafer_yolo/test/images/10836_image1_resize_JPG.rf.6698d2810c062b3a7ec07e3ca3ff1134.jpg
+data/processed/roboflow_wafer_yolo/test/images/10927_image1_jpg.rf.3cb7c504a951c5e64505af9beac9cf64.jpg
+data/processed/roboflow_wafer_yolo/test/images/1097_image2_jpg.rf.a373a45df7dfac7eb54e8df4228828e0.jpg
+data/processed/roboflow_wafer_yolo/test/images/1098_image1_jpg.rf.b017c02d4430b4d8ea2e2a79a39b40fc.jpg
+data/processed/roboflow_wafer_yolo/test/images/10991_image5_jpg.rf.8efa26ff718ff51690c546300fc1aa18.jpg
+data/processed/roboflow_wafer_yolo/test/images/11104_image2_resize_JPG.rf.64fb8542a751ab03c2ae587f2481dacc.jpg
+data/processed/roboflow_wafer_yolo/test/images/11519_image1_jpg.rf.99eff517c45d145f8879ba3b1eaf2583.jpg
+data/processed/roboflow_wafer_yolo/test/images/11545_image2_jpg.rf.1e74faa4a24e9b225a922ab3b0cfd0a6.jpg
+data/processed/roboflow_wafer_yolo/test/images/11578_image1_jpg.rf.c41186fabe96a12f6a19f91aa2eb51be.jpg
+data/processed/roboflow_wafer_yolo/test/images/12435_image1_resize_JPG.rf.fcebcf522f9159f8a5a2de191b77cff1.jpg
+data/processed/roboflow_wafer_yolo/test/images/12457_image1_resize_JPG.rf.f08aee0ada29c88b12724c95604c4dec.jpg
+data/processed/roboflow_wafer_yolo/test/images/12899_image2_resize_JPG.rf.3f21b7ff009637e19d72003f38617caa.jpg
+data/processed/roboflow_wafer_yolo/test/images/12979_image1_resize_JPG.rf.7e1452709a45ceda84f7042b0772de3c.jpg
+data/processed/roboflow_wafer_yolo/test/images/13562_image1_jpg.rf.73bab1c0e2f3a2059d7a0b1f898a2dfb.jpg
+data/processed/roboflow_wafer_yolo/test/images/13764_image1_jpg.rf.876e01460512c7d043ed3300c46e0f65.jpg
+data/processed/roboflow_wafer_yolo/test/images/1381_image1_jpg.rf.b67ee24510fd6f11a5f90fcbc686f828.jpg
+data/processed/roboflow_wafer_yolo/test/images/13966_image1_jpg.rf.12467fe9132f9dd307e2f6c189be2d75.jpg
+data/processed/roboflow_wafer_yolo/test/images/13972_image1_jpg.rf.7983c8a84cfaf6d2ac9ac6616070cfd2.jpg
+data/processed/roboflow_wafer_yolo/test/images/14057_image1_jpg.rf.39e24bd3c04b39304203a5f9186b73ce.jpg
+data/processed/roboflow_wafer_yolo/test/images/14070_image1_jpg.rf.63502be3a5fc6de90f35038ad3354b26.jpg
+data/processed/roboflow_wafer_yolo/test/images/15070_image1_resize_JPG.rf.4a99e96727d93266893f6859e4bcd007.jpg
+data/processed/roboflow_wafer_yolo/test/images/15520_image1_resize_JPG.rf.b677dc79f988a3c5cba5e8084ceecbc4.jpg
+data/processed/roboflow_wafer_yolo/test/images/1572_image1_jpg.rf.b7d232806efb65ff6efe25823ffbd24e.jpg
+data/processed/roboflow_wafer_yolo/test/images/16380_image2_jpg.rf.db2f408e71fd2ca6c0923e4d4eab4b4d.jpg
+data/processed/roboflow_wafer_yolo/test/images/17172_image1_jpg.rf.35d8d4d3e0cc28e7f2d827ca8979ee16.jpg
