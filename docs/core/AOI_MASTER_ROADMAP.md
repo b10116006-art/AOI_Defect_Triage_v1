@@ -462,3 +462,116 @@ Items DG-1 through DG-8 are defined in `docs/core/B_PROJECT_BRIEF.md`
 
 See `docs/core/B_PROJECT_BRIEF.md` §9 for the execution-level item
 definitions, B8.3 integration, and gating timing.
+
+---
+
+## 14. Portfolio Stage Overlay (Stage 1–4)
+
+_Added 2026-05-22. Append-only overlay. This section does not modify the Phase
+Map in §5; it maps existing phases/tracks onto a delivery timeline and records
+planned documentation deliverables. Status tags used below:_
+**[implemented] / [in progress] / [planned] / [gated] / [deferred]**.
+
+### 14.0 Phase 4 canonical identity (reconciliation)
+
+This overlay sets the canonical identity of **Phase 4 = LLM defect / evidence
+explanation**, consistent with `AOI_PROJECT_STATE.md` §6. The earlier §5 entry
+"Phase 4 — Batch Inference + Production-style IO" is **reframed as a supporting
+production-hardening / future serving capability**, not the main Phase 4
+identity. Batch inference remains an optional serving enhancement that may land
+before, during, or after Phase 4 explanation work; it no longer defines the
+phase.
+
+§5 above is left unedited for history. Where §5 and this section differ on the
+meaning of "Phase 4," **this section is canonical**. (`README.md` still carries
+the old Phase 4 label and should be reconciled during the Stage 1 README pass.)
+
+### 14.1 Scope and exclusions
+
+- Records **repo-facing** roadmap items only.
+- Deliberately excludes external portfolio activity (resume wording, articles,
+  social posts, hiring targets, hardware budgets, admissions/IELTS timelines)
+  and other repos' internal milestones. Those live outside this repo.
+
+### 14.2 Stage map
+
+**Stage 1 — Foundation Polish [planned]**
+Order rule: B8.3 / DG closeout proceeds first; Stage 1 polish follows.
+- `docs/adr/ADR_001_phase3_detection_not_feasible.md` — promote the existing
+  §Phase 3 trade-off narrative into a standalone ADR. **[planned]**
+- `LICENSE` (MIT) file at repo root — README already states MIT; the file
+  itself is missing. **[planned]**
+- `docs/images/confusion_matrix.png` + README embed (Phase 1 per-class result).
+  **[planned]**
+- `docs/images/json_contract_example.json` + README block (contract example +
+  rationale). **[planned]**
+- README portfolio pass: architecture diagram, quantitative results block,
+  JSON contract example, "Industrial AI Stack" cross-link. **[planned]**
+  (cross-link to `mes-rag-assistant` already partially present.)
+
+**Stage 2 — Phase 4 LLM Explanation + closeout [planned]**
+- **Phase 4 first increment** — LLM-based explanation over a CNN/YOLO
+  prediction; spec + minimal POC. **[planned]**
+  - Output structured as a Pydantic `LLMExplanation` schema (input: image +
+    predicted class + confidence; output: structured explanation). **[planned]**
+- B8.3 / DG track closeout. **[in progress → planned closeout]**
+- `docs/track_a_b_integration_spec.md` — how Track A (wafer-map classification)
+  and Track B (camera detection) fit together at the contract boundary.
+  **[planned]** (The A→B contract itself is already specified in
+  `B_PROJECT_BRIEF.md` §4; this is the integration-level spec, not a contract
+  change.)
+
+**Stage 3 — MES Integration + Cross-System Demo [planned, gated]**
+- `docs/mes_integration_spec.md` — AOI-side integration spec. **[gated]** — see
+  §9 of `MES_INTEGRATION_BLUEPRINT.md`; blocked until the MES repo publishes
+  `aoi_sidecar_spec.md`.
+- Track A + B integration demo notebook. **[planned]**
+- End-to-end cross-repo demo notebook (AOI → MES → RAG). **[planned]**
+  (cross-repo; coordinate before committing.)
+- `INDUSTRIAL_AI_STACK.md`. **[planned]** (cross-repo artifact.)
+
+**Stage 4 — Post-enrollment / research [deferred]**
+- Thesis topic, publication draft, real industrial dataset access.
+  **[deferred]** — out of self-study scope; recorded for direction only.
+- Edge deployment work — see §15. **[gated / deferred]**
+
+### 14.3 Ordering invariants (unchanged)
+
+1. B8.3 / DG closeout before new feature phases.
+2. Stage 1 polish before Phase 4 build.
+3. Phase 4 (LLM explanation) is the Stage 2 priority.
+4. Phase 5 / MES integration only **after** the MES sidecar spec exists.
+5. Locked JSON contract (§7) is not modified by any item above.
+
+---
+
+## 15. Edge Deployment Track (planned, gated — reference only)
+
+_Added 2026-05-22. Append-only. This track is **not** an active phase and is
+**not** promoted to implementation. Recorded for direction only._
+
+### 15.1 Status and gate
+
+- Status: **[planned, gated]** — strictly after Stage 2, and dependent on a
+  **stable AOI evidence service + Phase 4 explanation layer** being in place
+  first.
+- Does **not** reorder the Phase Map (§5) and does **not** override §10
+  "Deferred on Purpose." Docker remains deferred per §10 until the serving
+  boundary is stable.
+- Nothing here authorizes hardware purchase or repo code now.
+
+### 15.2 Reference scope (when un-gated)
+
+Potential future items, in rough dependency order — all **[deferred]**:
+- ONNX export of the trained classifier (with output-equivalence test).
+- TensorRT FP16/INT8 quantization + accuracy-delta report.
+- Jetson-class edge deploy + latency/throughput benchmark.
+- Containerized inference image (still subject to §10).
+- Live-camera ingest demo.
+- `docs/adr/ADR_002_edge_deployment.md` to capture the decision when the gate
+  opens.
+
+### 15.3 Honesty note
+
+This is a portfolio-grade engineering-pattern track, not a fab-deployment claim.
+It must not be presented as implemented until items land.

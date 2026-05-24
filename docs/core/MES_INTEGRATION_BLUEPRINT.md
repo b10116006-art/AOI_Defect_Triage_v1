@@ -158,3 +158,26 @@ For demo and interview, the correct architecture story is:
 Together they form:
 
 **image → process → reasoning → decision**
+
+---
+
+## 9. Phase 5 Sequencing Dependency (AOI ← MES sidecar spec)
+
+_Added 2026-05-22. Append-only._
+
+Phase 5 (AOI → MES integration) is **gated** on an external precondition:
+
+- The MES repo must first publish its AOI sidecar contract
+  (`aoi_sidecar_spec.md`).
+- Only then does the AOI repo write `docs/mes_integration_spec.md`, aligning the
+  AOI `/predict` response schema to the published sidecar contract.
+
+Until that spec exists:
+- AOI keeps its runtime independent (consistent with §2 and §7).
+- The locked AOI JSON contract is **not** changed to anticipate MES needs.
+  Alignment happens in the AOI-side integration spec at Stage 3, by additive
+  enrichment on the MES side (see §5), not by mutating AOI output.
+- No MES API routes are touched from this repo.
+
+Status: **[gated]** — blocked on MES `aoi_sidecar_spec.md`. See
+`AOI_MASTER_ROADMAP.md` §14.2 (Stage 3) and §14.3 (ordering invariants).
