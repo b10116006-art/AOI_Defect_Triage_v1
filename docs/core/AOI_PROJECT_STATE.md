@@ -152,6 +152,7 @@ Do not decide yet:
 - full LLM explanation design
 - RAG knowledge design
 - multi-service orchestration
+- edge deployment (ONNX / TensorRT / Jetson / containerized serving) — planned & gated post-Stage 2; see AOI_MASTER_ROADMAP.md §15
 
 ## 11. Phase 2 observed validation evidence
 Observed working behaviors:
