@@ -1,0 +1,16 @@
+{
+  "wm811k_cnn_baseline": {
+    "dataset": "WM-811K",
+    "model": "cnn_baseline",
+    "usable_samples": 172950,
+    "num_classes": 9,
+    "test_accuracy": 0.8928,
+    "val_accuracy": 0.9640
+  },
+  "roboflow_yolo_baseline": {
+    "dataset": "Roboflow Wafer Defect",
+    "model": "YOLOv8",
+    "num_classes": 7,
+    "map50": 0.715
+  }
+}

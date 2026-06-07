@@ -114,6 +114,12 @@ curl -X POST http://localhost:8000/predict \
 }
 ```
 
+## Baseline Metrics
+
+Baseline evaluation metrics for both tracks are recorded in
+[`docs/baseline_metrics.json`](docs/baseline_metrics.json)
+(WM-811K CNN test accuracy 89.28%; YOLOv8 Roboflow mAP50 0.715).
+
 ## Development Status
 
 | Phase | Description | Status |
