@@ -1,0 +1,16 @@
+{
+  "image_id": "img_0001",
+  "machine_id": "AOI_01",
+  "lot_id": "LOT123",
+  "layer": "ILD",
+  "timestamp": "2026-03-29T10:00:00+00:00",
+  "defect_class": "Scratch",
+  "confidence": 0.9312,
+  "bbox": [0, 0, 64, 64],
+  "ng_flag": true,
+  "model_name": "cnn_baseline",
+  "model_version": "cnn_baseline_v1",
+  "request_id": "a1b2c3d4-e5f6-4789-abcd-1234567890ef",
+  "processing_time_ms": 8.47,
+  "schema_version": "v1"
+}

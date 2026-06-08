@@ -114,6 +114,11 @@ curl -X POST http://localhost:8000/predict \
 }
 ```
 
+## Example Output
+
+A complete example of the locked 14-field JSON contract returned by `POST /predict`
+is provided in [`docs/json_contract_example.json`](docs/json_contract_example.json).
+
 ## Baseline Metrics
 
 Baseline evaluation metrics for both tracks are recorded in
