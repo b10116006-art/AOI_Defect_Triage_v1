@@ -125,6 +125,18 @@ Baseline evaluation metrics for both tracks are recorded in
 [`docs/baseline_metrics.json`](docs/baseline_metrics.json)
 (WM-811K CNN test accuracy 89.28%; YOLOv8 Roboflow mAP50 0.715).
 
+## Detection Examples
+
+Representative YOLOv8 predictions on Roboflow Wafer Defect validation images.
+
+![YOLOv8 validation predictions](docs/assets/yolo_val_batch0_pred.jpg)
+
+## Evaluation Visualization
+
+Normalized confusion matrix for the YOLOv8 baseline.
+
+![YOLOv8 normalized confusion matrix](docs/assets/yolo_confusion_matrix_normalized.png)
+
 ## Development Status
 
 | Phase | Description | Status |
