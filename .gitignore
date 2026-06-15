@@ -36,3 +36,8 @@ Thumbs.db
 .claude/
 *.jpg
 *.png
+
+# Allow committed documentation assets (README figures)
+!docs/assets/
+!docs/assets/*.jpg
+!docs/assets/*.png
